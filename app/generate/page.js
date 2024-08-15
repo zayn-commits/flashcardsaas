@@ -4,7 +4,8 @@ import { useUser } from "@clerk/nextjs"
 import { Container, Box, Typography, Paper, TextField, Button, Card, CardActionArea, CardContent, DialogTitle, DialogContentText, DialogActions, Dialog, DialogContent, Grid } from "@mui/material"
 import { useState } from "react"
 import { useRouter } from 'next/navigation'
-import { writeBatch } from 'firebase/firestore'
+import { db } from "@/firebase"
+import { doc, collection, setDoc, getDoc, writeBatch } from "firebase/firestore"
 
 
 export default function Generate() {
@@ -66,7 +67,7 @@ export default function Generate() {
             batch.set(userDocRef, {flashcards: [{name}]})
         }
 
-        const colrRef = collection(userDocRef, name)
+        const colRef = collection(userDocRef, name)
         flashcards.forEach((flashcard) => {
             const cardDocRef = doc(colRef)
             batch.set(cardDocRef, flashcard)
