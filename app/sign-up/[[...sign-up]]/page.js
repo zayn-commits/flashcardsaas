@@ -3,7 +3,7 @@ import { AppBar, Container, Toolbar, Typography, Button, Link, Box} from "@mui/m
 
 export default function SignUpPage(){
     return (
-    <Container maxWidth="sm">
+    <Container maxWidth="100vw">
         <AppBar 
         position = "static" 
         sx={{
