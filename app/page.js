@@ -17,11 +17,11 @@ import {
   List,
   ListItem,
   ListItemText,
+  ThemeProvider,
+  createTheme
 } from "@mui/material";
-
 import MenuIcon from "@mui/icons-material/Menu";
-import Head from "next/head";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { styled } from '@mui/system';
 
 
 export default function Home() {
@@ -37,7 +37,7 @@ export default function Home() {
     router.push(path); // Navigate to the selected page
   };
 
-  const circleCount = 75; // Increased number of circles for a denser effect
+  const circleCount = 100; // Increased number of circles for a denser effect
 
   const circles = Array.from({ length: circleCount }, (_, index) => (
     <Box
@@ -50,7 +50,7 @@ export default function Home() {
         backgroundColor: "rgba(255, 255, 255, 0.6)", // Slightly more transparent circles
         top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
-        animation: `move ${Math.random() * 15 + 10}s ease-in-out infinite`, // Smoother animation with longer duration
+        animation: `move ${Math.random() * 10 + 25}s ease-in-out infinite`, // Smoother animation with longer duration
       }}
     />
   ));
@@ -80,6 +80,91 @@ export default function Home() {
     }
   };
 
+  const fadeInKeyframes = `
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+  const HeaderGradientText = styled(Typography)(({ theme }) => ({
+    background: 'linear-gradient(to right, #f0f0f0, #5a66d6)', // Gradient colors
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    fontFamily: 'Verdana',
+    fontWeight: 'bold',
+    fontSize: '6rem',
+    animation: `shimmer 2s linear infinite, fadeIn 2s ease-in-out`,
+  '@keyframes shimmer': {
+    '0%': {
+      backgroundPosition: '-200% 0',
+    },
+    '100%': {
+      backgroundPosition: '200% 0',
+    },
+  },
+  '@keyframes fadeIn': {
+    '0%': {
+      opacity: 0,
+    },
+    '100%': {
+      opacity: 1,
+    },
+  },
+    [theme.breakpoints.down('lg')]: {
+      fontSize: '5rem', // Size for large screens
+    },
+    [theme.breakpoints.down('md')]: {
+      fontSize: '4rem', // Size for medium screens
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '3rem', // Size for small screens
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '2rem', // Size for extra small screens
+    },
+  }));
+
+  const SubGradientText = styled(Typography)(({ theme }) => ({
+    background: 'linear-gradient(to right, #f0f0f0, #D5AAFF)', // Gradient colors
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    fontFamily: 'Verdana',
+    fontSize: '2rem',
+    animation: `shimmer 2s linear infinite, fadeIn 2s ease-in-out`,
+  '@keyframes shimmer': {
+    '0%': {
+      backgroundPosition: '-200% 0',
+    },
+    '100%': {
+      backgroundPosition: '200% 0',
+    },
+  },
+  '@keyframes fadeIn': {
+    '0%': {
+      opacity: 0,
+    },
+    '100%': {
+      opacity: 1,
+    },
+  },
+    [theme.breakpoints.down('lg')]: {
+      fontSize: '1rem', // Size for large screens
+    },
+    [theme.breakpoints.down('md')]: {
+      fontSize: '1rem', // Size for medium screens
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1rem', // Size for small screens
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '1.5rem', // Size for extra small screens
+    },
+      
+  }));
+
 
   return (
     <Box
@@ -88,7 +173,15 @@ export default function Home() {
         width: '100vw',
         height: '100vh',
         overflow: 'hidden',
-        background: 'linear-gradient(to bottom, #000046, #1d1d1d)', // Space background gradient
+        background: 'linear-gradient(to bottom, #000046, #000000)', 
+        '@keyframes move': {
+          '0%': {
+            transform: 'translateY(0)',
+          },
+          '100%': {
+            transform: 'translateY(-100vh)',
+          },
+        },
       }}
     >
       <Box
@@ -126,6 +219,7 @@ export default function Home() {
             />
           ))}
         </Box>
+        {circles}
       </Box>
       <style jsx>{`
         @keyframes twinkle {
@@ -133,7 +227,7 @@ export default function Home() {
           100% { transform: scale(1.5); opacity: 1; }
         }
       `}</style>
-      {circles}
+      
       <Toolbar position="fixed">
         <IconButton
           edge="start"
@@ -200,22 +294,20 @@ export default function Home() {
           variant="h2"
           gutterBottom
           color="white"
-          sx={{
-            fontFamily: "Garamond", // Change this to your desired font
-          }}
         >
           {" "}
-          Welcome to Flashcard SaaS
+          <HeaderGradientText>Welcome to BrainFlash</HeaderGradientText>
         </Typography>{" "}
         <Typography variant="h5" gutterBottom color="white">
-          The easiest way to make flashcards from your text
+          <SubGradientText>The easiest way to make flashcards from your text</SubGradientText>
         </Typography>
       </Box>
       <Box
         sx={{
           my: 6,
         }}
-      ></Box>
+      > </Box>
+      
 
       {/* <Box
         sx={{
