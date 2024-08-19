@@ -5,25 +5,47 @@ import { useEffect, useState } from "react";
 import { collection, doc, getDoc, getDocs, docRef } from "firebase/firestore";
 import { db } from "@/firebase";
 import {
+  AppBar,
   Container,
-  Box,
+  Toolbar,
   Typography,
+  Button,
+  Box,
+  Grid,
+  IconButton,
+  Drawer,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Paper,
   TextField,
-  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
   Card,
   CardActionArea,
   CardContent,
-  DialogTitle,
-  DialogContentText,
-  DialogActions,
-  Dialog,
-  DialogContent,
-  Grid,
+
 } from "@mui/material";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
+import { styled } from "@mui/system";
+import MenuIcon from "@mui/icons-material/Menu";
+
 
 export default function Flashcard() {
+  
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
+  const handleNavigation = (path) => () => {
+    setDrawerOpen(false); // Close the drawer
+    router.push(path); // Navigate to the selected page
+  };
+
   const { isLoaded, isSignedIn, user } = useUser();
   const [flashcards, setFlashcards] = useState([]);
   const [flipped, setFlipped] = useState([]);
@@ -57,8 +79,161 @@ export default function Flashcard() {
     return <></>;
   }
 
+
+  const SubGradientText = styled(Typography)(({ theme }) => ({
+    background: "linear-gradient(to right, #D5AAFF, #000000)", // Gradient colors
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    fontFamily: "",
+    fontSize: "2rem",
+    animation: `shimmer 2s linear infinite, fadeIn 2s ease-in-out`,
+    "@keyframes shimmer": {
+      "0%": {
+        backgroundPosition: "-200% 0",
+      },
+      "100%": {
+        backgroundPosition: "200% 0",
+      },
+    },
+    "@keyframes fadeIn": {
+      "0%": {
+        opacity: 0,
+      },
+      "100%": {
+        opacity: 1,
+      },
+    },
+    [theme.breakpoints.down("lg")]: {
+      fontSize: "1rem", // Size for large screens
+    },
+    [theme.breakpoints.down("md")]: {
+      fontSize: "1rem", // Size for medium screens
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "1rem", // Size for small screens
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "1.5rem", // Size for extra small screens
+    },
+  }));
+
+
+
+
   return (
-    <Container maxWidth="100vw">
+    <Box
+    sx={{
+      position: "relative",
+      width: "100vw",
+      minHeight: "100vh", // Ensures Box takes at least full viewport height but can expand
+      overflow: "hidden",
+      background: "linear-gradient(to bottom, #f0f0f0, #91bbff)",
+      paddingBottom: "20px", // Add some padding to ensure content doesn't touch the edge
+      textAlign: "center",
+      boxShadow: "0px -2px 5px rgba(0, 0, 0, 0.1)",
+      justifyContent: "center",
+      alignItems: "center",    
+  }}>
+    <Toolbar position="fixed">
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={toggleDrawer(true)}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" style={{ flexGrow: 1 }} />
+        <SignedOut>
+          <Button color="inherit" href="/sign-in">
+            {" "}
+            Login{" "}
+          </Button>
+          <Button color="inherit" href="/sign-up">
+            {" "}
+            Signup{" "}
+          </Button>
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </Toolbar>
+
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <Box
+          sx={{
+            width: 250,
+            background: 'linear-gradient(to top, #f0f0f0, #b7cced)', // Custom background color
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
+        >
+          {/* Header inside Drawer */}
+          <Box sx={{ p: 2, textAlign: 'center', backgroundColor: 'transparent', color: '#fff' }}>
+            <Typography variant="h6" ><SubGradientText>FlipFlash</SubGradientText></Typography>
+          </Box>
+
+          {/* Buttons for Navigation */}
+          <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ my: 1 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                href="/"
+                sx={{
+                  my: 1,
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              >
+                Home
+              </Button>
+            </Box>
+            <Box sx={{ my: 1 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                href="/generate"
+                sx={{
+                  my: 1,
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              >
+                Generate
+              </Button>
+            </Box>
+            <Box sx={{ my: 1 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                href="/flashcards"
+                sx={{
+                  my: 1,
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              >
+                Flashcards
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Drawer>
       <Grid contianer spacing={3} sx={{ mt: 4 }}>
         {" "}
         {flashcards.length > 0 && (
@@ -138,6 +313,6 @@ export default function Flashcard() {
           </Box>
         )}
       </Grid>
-    </Container>
+    </Box>
   );
 }
