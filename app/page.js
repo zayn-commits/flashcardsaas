@@ -14,14 +14,14 @@ import {
   Grid,
   IconButton,
   Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  ThemeProvider,
-  createTheme
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from '@mui/system';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 
 export default function Home() {
@@ -90,10 +90,10 @@ export default function Home() {
 `;
 
   const HeaderGradientText = styled(Typography)(({ theme }) => ({
-    background: 'linear-gradient(to right, #f0f0f0, #5a66d6)', // Gradient colors
+    background: 'linear-gradient(to right, #000000, #5a66d6)', // Gradient colors
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
-    fontFamily: 'Verdana',
+    fontFamily: '',
     fontWeight: 'bold',
     fontSize: '6rem',
     animation: `shimmer 2s linear infinite, fadeIn 2s ease-in-out`,
@@ -128,10 +128,10 @@ export default function Home() {
   }));
 
   const SubGradientText = styled(Typography)(({ theme }) => ({
-    background: 'linear-gradient(to right, #f0f0f0, #D5AAFF)', // Gradient colors
+    background: 'linear-gradient(to right, #D5AAFF, #000000)', // Gradient colors
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
-    fontFamily: 'Verdana',
+    fontFamily: '',
     fontSize: '2rem',
     animation: `shimmer 2s linear infinite, fadeIn 2s ease-in-out`,
   '@keyframes shimmer': {
@@ -167,67 +167,15 @@ export default function Home() {
 
 
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
-        background: 'linear-gradient(to bottom, #000046, #000000)', 
-        '@keyframes move': {
-          '0%': {
-            transform: 'translateY(0)',
-          },
-          '100%': {
-            transform: 'translateY(-100vh)',
-          },
-        },
-      }}
-    >
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none', // Allows clicking through the background
-        }}
-      >
-        <Box
-          sx={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            overflow: 'hidden',
-          }}
-        >
-          {[...Array(100)].map((_, i) => (
-            <Box
-              key={i}
-              sx={{
-                position: 'absolute',
-                borderRadius: '50%',
-                backgroundColor: '#ffffff',
-                opacity: Math.random() * 0.6 + 0.4,
-                width: Math.random() * 3 + 1,
-                height: Math.random() * 3 + 1,
-                top: `${Math.random() * 100}vh`,
-                left: `${Math.random() * 100}vw`,
-                animation: 'twinkle 1.5s infinite alternate',
-              }}
-            />
-          ))}
-        </Box>
-        {circles}
-      </Box>
-      <style jsx>{`
-        @keyframes twinkle {
-          0% { transform: scale(1); opacity: 0.4; }
-          100% { transform: scale(1.5); opacity: 1; }
-        }
-      `}</style>
-      
+    <Box 
+    sx={{
+      position: 'relative',
+      width: '100vw',
+      minHeight: '100vh', // Ensures Box takes at least full viewport height but can expand
+      overflow: 'hidden',
+      background: 'linear-gradient(to bottom, #f0f0f0, #91bbff)', 
+      paddingBottom: '20px', // Add some padding to ensure content doesn't touch the edge 
+    }}>
       <Toolbar position="fixed">
         <IconButton
           edge="start"
@@ -253,30 +201,80 @@ export default function Home() {
         </SignedIn>
       </Toolbar>
 
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={toggleDrawer(false)}
-        sx={{
-          '& .MuiDrawer-paper': {
-            width: 240,
-            backgroundColor: 'transparent', // Drawer background color
-            color: '#ecf0f1', // Text color inside the Drawer
-          },
-        }}
-      >
-        <List>
-          <ListItem button onClick={handleNavigation("/")}>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem button onClick={handleNavigation("/generate")}>
-            <ListItemText primary="Generate" />
-          </ListItem>
-          <ListItem button onClick={handleNavigation("/flashcards")}>
-            <ListItemText primary="Flashcards" />
-          </ListItem>
-          {}
-        </List>
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <Box
+          sx={{
+            width: 250,
+            background: 'linear-gradient(to top, #f0f0f0, #b7cced)', // Custom background color
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
+        >
+          {/* Header inside Drawer */}
+          <Box sx={{ p: 2, textAlign: 'center', backgroundColor: 'transparent', color: '#fff' }}>
+            <Typography variant="h6" ><SubGradientText>FlipFlash</SubGradientText></Typography>
+          </Box>
+
+          {/* Buttons for Navigation */}
+          <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ my: 1 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                href="/"
+                sx={{
+                  my: 1,
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              >
+                Home
+              </Button>
+            </Box>
+            <Box sx={{ my: 1 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                href="/generate"
+                sx={{
+                  my: 1,
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              >
+                Generate
+              </Button>
+            </Box>
+            <Box sx={{ my: 1 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                href="/flashcards"
+                sx={{
+                  my: 1,
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              >
+                Flashcards
+              </Button>
+            </Box>
+          </Box>
+        </Box>
       </Drawer>
 
       <Box
@@ -296,7 +294,7 @@ export default function Home() {
           color="white"
         >
           {" "}
-          <HeaderGradientText>Welcome to BrainFlash</HeaderGradientText>
+          <HeaderGradientText>Welcome to FlipFlash</HeaderGradientText>
         </Typography>{" "}
         <Typography variant="h5" gutterBottom color="white">
           <SubGradientText>The easiest way to make flashcards from your text</SubGradientText>
@@ -307,7 +305,6 @@ export default function Home() {
           my: 6,
         }}
       > </Box>
-      
 
       {/* <Box
         sx={{
@@ -383,6 +380,75 @@ export default function Home() {
           </Grid>
         </Grid>
       </Box> */}
+      <Box
+      sx={{
+        backgroundColor: 'transparent',
+        padding: '60px 0',
+        mt: 8,
+        textAlign: 'center',
+      }}
+    >
+      <Container maxWidth="md" >
+        <Typography variant="h4" gutterBottom>
+          <SubGradientText>Frequently Asked Questions</SubGradientText>
+        </Typography>
+        <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+        >
+          <Typography>What is the purpose of this site?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            This site allows users to easily create and manage flashcards for studying and review.
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2a-content"
+        >
+          <Typography>How can I create a new flashcard?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            You can create a new flashcard by navigating to the 'Create Flashcard' page and filling out the form.
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel3a-content"
+        >
+          <Typography>Can I share my flashcards with others?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            Yes, you can share your flashcards by sending a link to others or by sharing your collection directly.
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel4a-content"        >
+          <Typography>Is there a way to review my flashcards?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            Absolutely! You can review your flashcards in the 'Review' section, where you can go through your cards one by one.
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      </Container>
+    </Box>
+      
     </Box>
   );
 }

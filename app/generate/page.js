@@ -1,11 +1,37 @@
 'use client'
 
 import { useUser } from "@clerk/nextjs"
-import { Container, Box, Typography, Paper, TextField, Button, Card, CardActionArea, CardContent, DialogTitle, DialogContentText, DialogActions, Dialog, DialogContent, Grid } from "@mui/material"
 import { useState } from "react"
 import { useRouter } from 'next/navigation'
 import { db } from "@/firebase"
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { doc, collection, setDoc, getDoc, writeBatch } from "firebase/firestore"
+import {
+    AppBar,
+    Container,
+    Toolbar,
+    Typography,
+    Button,
+    Box,
+    Grid,
+    IconButton,
+    Drawer,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Paper,
+    TextField,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+
+  } from "@mui/material";
+  import { styled } from '@mui/system';
+  import MenuIcon from "@mui/icons-material/Menu";
+
+
 
 
 export default function Generate() {
@@ -16,6 +42,17 @@ export default function Generate() {
     const [name, setName] = useState('')
     const [open, setOpen] = useState(false)
     const router = useRouter()
+
+    const [drawerOpen, setDrawerOpen] = useState(false);
+
+    const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
+
+  const handleNavigation = (path) => () => {
+    setDrawerOpen(false); // Close the drawer
+    router.push(path); // Navigate to the selected page
+  };
 
     const handleSubmit = async ()=>{
 
@@ -78,85 +115,219 @@ export default function Generate() {
         router.push('/flashcards')
     }
 
+    const SubGradientText = styled(Typography)(({ theme }) => ({
+        background: 'linear-gradient(to right, #D5AAFF, #000000)', // Gradient colors
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        fontFamily: '',
+        fontSize: '2rem',
+        animation: `shimmer 2s linear infinite, fadeIn 2s ease-in-out`,
+      '@keyframes shimmer': {
+        '0%': {
+          backgroundPosition: '-200% 0',
+        },
+        '100%': {
+          backgroundPosition: '200% 0',
+        },
+      },
+      '@keyframes fadeIn': {
+        '0%': {
+          opacity: 0,
+        },
+        '100%': {
+          opacity: 1,
+        },
+      },
+        [theme.breakpoints.down('lg')]: {
+          fontSize: '1rem', // Size for large screens
+        },
+        [theme.breakpoints.down('md')]: {
+          fontSize: '1rem', // Size for medium screens
+        },
+        [theme.breakpoints.down('sm')]: {
+          fontSize: '1rem', // Size for small screens
+        },
+        [theme.breakpoints.down('xs')]: {
+          fontSize: '1.5rem', // Size for extra small screens
+        },
+          
+      }));
+
     return(
         <Box
         sx={{
-          position: 'relative',
-          width: '100vw',
-          height: '100vh',
-          overflow: 'hidden',
-          background: 'linear-gradient(to bottom, #000046, #000000)', 
-          '@keyframes move': {
-            '0%': {
-              transform: 'translateY(0)',
-            },
-            '100%': {
-              transform: 'translateY(-100vh)',
-            },
-          },
-        }}
-      >
+            position: 'relative',
+            width: '100vw',
+            minHeight: '100vh', // Ensures Box takes at least full viewport height but can expand
+            overflow: 'hidden',
+            background: 'linear-gradient(to bottom, #f0f0f0, #91bbff)', 
+            paddingBottom: '20px', // Add some padding to ensure content doesn't touch the edge 
+            textAlign: 'center',
+            boxShadow: '0px -2px 5px rgba(0, 0, 0, 0.1)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            <Toolbar position="fixed">
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={toggleDrawer(true)}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" style={{ flexGrow: 1 }} />
+        <SignedOut>
+          <Button color="inherit" href="/sign-in">
+            {" "}
+            Login{" "}
+          </Button>
+          <Button color="inherit" href="/sign-up">
+            {" "}
+            Signup{" "}
+          </Button>
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </Toolbar>
+
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box
           sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
+            width: 250,
+            background: 'linear-gradient(to top, #f0f0f0, #b7cced)', // Custom background color
             height: '100%',
-            pointerEvents: 'none', // Allows clicking through the background
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
           }}
         >
-          <Box
-            sx={{
-              position: 'relative',
-              width: '100%',
-              height: '100%',
-              overflow: 'hidden',
-            }}
-          >
-            {[...Array(100)].map((_, i) => (
-              <Box
-                key={i}
+          {/* Header inside Drawer */}
+          <Box sx={{ p: 2, textAlign: 'center', backgroundColor: 'transparent', color: '#fff' }}>
+            <Typography variant="h6" ><SubGradientText>FlipFlash</SubGradientText></Typography>
+          </Box>
+
+          {/* Buttons for Navigation */}
+          <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ my: 1 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                href="/"
                 sx={{
-                  position: 'absolute',
-                  borderRadius: '50%',
-                  backgroundColor: '#ffffff',
-                  opacity: Math.random() * 0.6 + 0.4,
-                  width: Math.random() * 3 + 1,
-                  height: Math.random() * 3 + 1,
-                  top: `${Math.random() * 100}vh`,
-                  left: `${Math.random() * 100}vw`,
-                  animation: 'twinkle 1.5s infinite alternate',
+                  my: 1,
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
                 }}
-              />
-            ))}
-        
-
-                <Typography variant ="h4">
-                    Generate Flashcards
-                </Typography>
-                <Paper sx={{p:4, width: '100%'}}>
-                    <TextField 
-                    value = {text}
-                    onChange = {(e) => setText(e.target.value)} 
-                    label = "Enter text"
-                    fullWidth 
-                    multiline
-                    rows={4}
-                    variant="outlined"
-                    sx={{
-                        mb:2,
-                    }} 
-                    /> 
-                    <Button 
-                    variant ='contained'
-                    color  ="primary"
-                    onClick={handleSubmit}
-                    fullWidth
-                    >Submit</Button>
-                </Paper>
+              >
+                Home
+              </Button>
             </Box>
-
+            <Box sx={{ my: 1 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                href="/generate"
+                sx={{
+                  my: 1,
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              >
+                Generate
+              </Button>
+            </Box>
+            <Box sx={{ my: 1 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                href="/flashcards"
+                sx={{
+                  my: 1,
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              >
+                Flashcards
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Drawer>
+    
+        <Typography 
+          variant="h4" 
+          align="center" 
+          sx={{ mb: 4, fontWeight: 'bold', color: '#00796b' }}
+        >
+          Generate Flashcards
+        </Typography>
+        <Paper 
+        elevation={3} 
+        sx={{ 
+          p: 4, 
+          width: '100%', 
+          maxWidth: 600, 
+          borderRadius: 2, 
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', 
+          backgroundColor: '#ffffff',
+        }}
+      >
+        <TextField 
+          value={text}
+          onChange={(e) => setText(e.target.value)} 
+          label="Enter text"
+          fullWidth 
+          multiline
+          rows={4}
+          variant="outlined"
+          sx={{ 
+            mb: 2, 
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 2, 
+              '& fieldset': {
+                borderColor: '#00796b',
+              },
+              '&:hover fieldset': {
+                borderColor: '#004d40',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#004d40',
+              },
+            },
+          }} 
+        /> 
+        <Button 
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          fullWidth
+          sx={{ 
+            borderRadius: 2, 
+            py: 1.5, 
+            fontWeight: 'bold', 
+            backgroundColor: '#00796b',
+            '&:hover': {
+              backgroundColor: '#004d40',
+            }
+          }}
+        >
+          Submit
+        </Button>
+      </Paper>
             {flashcards.length > 0 && (<Box sx= {{mt:4}}>
                 <Typography variant = "h5">Flashcards Preview</Typography>
                 <Grid container spacing = {3}>
@@ -259,8 +430,7 @@ export default function Generate() {
                         </Button>
                     </DialogActions>
                 </Dialog>
-                </Box>
-        </Box>
+    </Box>
     )
 
 }
