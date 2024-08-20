@@ -116,7 +116,7 @@ export default function Flashcards(){
        top: "px",
        left: 0,
        zIndex: 1200,
-       mb: "125px"
+       mb: "110px"
      }} >
         <IconButton
           edge="start"
@@ -233,7 +233,7 @@ export default function Flashcards(){
       align="center"
       sx={{ mb: 3, color: "#00796b", fontWeight: "bold" }} // Title styling
     >
-      Flashcards Preview
+      <SubGradientText>Flashcards Preview</SubGradientText>
     </Typography>
     <Grid
       container

@@ -79,13 +79,15 @@ export default function Flashcard() {
     return <></>;
   }
 
+  
+
 
   const SubGradientText = styled(Typography)(({ theme }) => ({
     background: "linear-gradient(to right, #D5AAFF, #000000)", // Gradient colors
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
     fontFamily: "",
-    fontSize: "2rem",
+    fontSize: "2.5rem",
     animation: `shimmer 2s linear infinite, fadeIn 2s ease-in-out`,
     "@keyframes shimmer": {
       "0%": {
@@ -95,25 +97,18 @@ export default function Flashcard() {
         backgroundPosition: "200% 0",
       },
     },
-    "@keyframes fadeIn": {
-      "0%": {
-        opacity: 0,
-      },
-      "100%": {
-        opacity: 1,
-      },
-    },
+    
     [theme.breakpoints.down("lg")]: {
-      fontSize: "1rem", // Size for large screens
+      fontSize: "2rem", // Size for large screens
     },
     [theme.breakpoints.down("md")]: {
-      fontSize: "1rem", // Size for medium screens
+      fontSize: "2rem", // Size for medium screens
     },
     [theme.breakpoints.down("sm")]: {
-      fontSize: "1rem", // Size for small screens
+      fontSize: "2rem", // Size for small screens
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: "1.5rem", // Size for extra small screens
+      fontSize: "2rem", // Size for extra small screens
     },
   }));
 
@@ -238,7 +233,7 @@ export default function Flashcard() {
         {" "}
         {flashcards.length > 0 && (
           <Box sx={{ mt: 4 }}>
-            <Typography variant="h5">Flashcards Preview</Typography>
+            <Typography variant="h5"><SubGradientText>Flashcards Preview</SubGradientText></Typography>
             <Grid container spacing={3}>
               {flashcards.map((flashcard, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
