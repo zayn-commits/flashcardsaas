@@ -25,6 +25,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 
 export default function Home() {
+  
   const [drawerOpen, setDrawerOpen] = useState(false);
   const router = useRouter();
 
@@ -128,7 +129,7 @@ export default function Home() {
   }));
 
   const SubGradientText = styled(Typography)(({ theme }) => ({
-    background: 'linear-gradient(to right, #D5AAFF, #000000)', // Gradient colors
+    background: 'linear-gradient(to right, #5a66d6, #000000)', // Gradient colors
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     fontFamily: '',
@@ -164,6 +165,7 @@ export default function Home() {
     },
       
   }));
+  
 
 
   return (
@@ -171,10 +173,22 @@ export default function Home() {
     sx={{
       position: 'relative',
       width: '100vw',
-      minHeight: '100vh', // Ensures Box takes at least full viewport height but can expand
+      minHeight: '100vh',
       overflow: 'hidden',
-      background: 'linear-gradient(to bottom, #f0f0f0, #91bbff)', 
-      paddingBottom: '20px', // Add some padding to ensure content doesn't touch the edge 
+      background: 'linear-gradient(to bottom, #f0f0f0, #91bbff)',
+      animation: 'backgroundMove 20s linear infinite',
+      '@keyframes backgroundMove': {
+        '0%': {
+          backgroundPosition: '0% 0%',
+        },
+        '50%': {
+          backgroundPosition: '0% 50%',
+        },
+        '100%': {
+          backgroundPosition: '0% 0%',
+        },
+      },
+      backgroundSize: '200% 200%',
     }}>
       <Toolbar position="fixed">
         <IconButton
@@ -380,7 +394,7 @@ export default function Home() {
           </Grid>
         </Grid>
       </Box> */}
-      <Box
+      {/* <Box
       sx={{
         backgroundColor: 'transparent',
         padding: '60px 0',
@@ -447,7 +461,7 @@ export default function Home() {
         </AccordionDetails>
       </Accordion>
       </Container>
-    </Box>
+    </Box> */}
       
     </Box>
   );

@@ -38,6 +38,8 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import MenuIcon from "@mui/icons-material/Menu";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
+
 
 export default function Generate() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -47,6 +49,16 @@ export default function Generate() {
   const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
   const router = useRouter();
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? flashcards.length - 1 : prevIndex - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === flashcards.length - 1 ? 0 : prevIndex + 1));
+  };
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -124,15 +136,7 @@ export default function Generate() {
     fontFamily: "",
     fontWeight: "bold",
     fontSize: "4rem",
-    animation: `shimmer 2s linear infinite, fadeIn 2s ease-in-out`,
-    "@keyframes fadeIn": {
-      "0%": {
-        opacity: 0,
-      },
-      "100%": {
-        opacity: 1,
-      },
-    },
+    
     [theme.breakpoints.down("lg")]: {
       fontSize: "5rem", // Size for large screens
     },
@@ -377,9 +381,10 @@ export default function Generate() {
             borderRadius: 2,
             py: 1.5,
             fontWeight: "bold",
-            backgroundColor: "#00796b",
+            backgroundImage: "linear-gradient(to right, #f0f0f0, #91bbff)", 
+            color: "#1d1d6b", // Set text color to black
             "&:hover": {
-              backgroundColor: "#004d40",
+              backgroundImage: "linear-gradient(to right, #f0f0f0, #6161fa)", // Reverse gradient on hover
             },
           }}
         >
@@ -388,111 +393,97 @@ export default function Generate() {
       </Paper>
 
       {flashcards.length > 0 && (
-        <Box sx={{
-            mt: 4, 
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection:"column" }}>
-          <Typography variant="h5" align="center" sx={{ mb: 2}} >Flashcards Preview</Typography>
-          <Grid container spacing={3} 
-                sx={{
-                maxWidth: "100%", // Ensure it doesn't exceed screen width
-                justifyContent: "center", 
-                display: "flex",
-                paddingLeft: "125px"
-            }}>
-            {flashcards.map((flashcard, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card 
-                 sx={{
-                    maxWidth: 280, // Adjust maxWidth as needed
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                    borderRadius: 2, // Adds rounded corners to the card
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    textAlign: "center",
-                  }}>
-                  <CardActionArea
-                    onClick={() => {
-                      handleCardClick(index);
-                    }}
-                  >
-                    <CardContent>
-                      <Box
-                        sx={{
-                          perspective: "1000px",
-                          width: "250px",
-                          height: "200px",
-                          "& > div": {
-                            transition: "transform 0.6s",
-                            transformStyle: "preserve-3d",
-                            position: "relative",
-                            width: "100%",
-                            height: "100%",
-                            boxShadow: "0 4px 8px 0 rgba(0,0,0, 0.2)",
-                            transform: flipped[index]
-                              ? "rotateY(180deg)"
-                              : "rotateY(0deg)",
-                          },
-                          "& > div > div": {
-                            position: "absolute",
-                            width: "100%",
-                            height: "100%",
-                            backfaceVisibility: "hidden",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            padding: 2,
-                            boxSizing: "border-box",
-                          },
-                          "& > div > div:nth-of-type(2)": {
-                            transform: "rotateY(180deg)",
-                          },
-                        }}
-                      >
-                        <div>
-                          <div>
-                            <Typography
-                              variant="h5"
-                              component="div"
-                              sx={{ fontSize: "1.1rem" }}
-                              alignItems="center"
-                            >
-                              {flashcard.front}
-                            </Typography>
-                          </div>
-                          <div>
-                            <Typography
-                              variant="h5"
-                              component="div"
-                              sx={{ fontSize: "1.1rem" }}
-                              alignItems="center"
-                            >
-                              {flashcard.back}
-                            </Typography>
-                          </div>
-                        </div>
-                      </Box>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-          <Box
+      <Box sx={{
+        mt: 4, 
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection:"column" ,
+        mb: "8px"
+      }}
+      
+      >
+        <Typography variant="h5" align="center" sx={{ mb: 2 }}>Flashcards Preview</Typography>
+
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton onClick={handlePrev}>
+            <ArrowBack />
+          </IconButton>
+
+          <Card 
             sx={{
-              mt: 4,
+              maxWidth: 280,
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              borderRadius: 2,
               display: "flex",
-              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
             }}
           >
-            <Button variant="contained" color="secondary" onClick={handleOpen}>
-              Save
-            </Button>
-          </Box>
+            <CardActionArea onClick={() => handleCardClick(currentIndex)}>
+              <CardContent>
+                <Box
+                  sx={{
+                    perspective: "1000px",
+                    width: "250px",
+                    height: "200px",
+                    "& > div": {
+                      transition: "transform 0.6s",
+                      transformStyle: "preserve-3d",
+                      position: "relative",
+                      width: "100%",
+                      height: "100%",
+                      boxShadow: "0 4px 8px 0 rgba(0,0,0, 0.2)",
+                      transform: flipped[currentIndex]
+                        ? "rotateY(180deg)"
+                        : "rotateY(0deg)",
+                    },
+                    "& > div > div": {
+                      position: "absolute",
+                      width: "100%",
+                      height: "100%",
+                      backfaceVisibility: "hidden",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      padding: 2,
+                      boxSizing: "border-box",
+                    },
+                    "& > div > div:nth-of-type(2)": {
+                      transform: "rotateY(180deg)",
+                    },
+                  }}
+                >
+                  <div>
+                    <div>
+                      <Typography variant="h5" sx={{ fontSize: "1.1rem" }}>
+                        {flashcards[currentIndex].front}
+                      </Typography>
+                    </div>
+                    <div>
+                      <Typography variant="h5" sx={{ fontSize: "1.1rem" }}>
+                        {flashcards[currentIndex].back}
+                      </Typography>
+                    </div>
+                  </div>
+                </Box>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+
+          <IconButton onClick={handleNext}>
+            <ArrowForward />
+          </IconButton>
         </Box>
+        <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+          <Button variant="contained" color="secondary" onClick={handleOpen}>
+            Save
+          </Button>
+        </Box>
+        
+        </Box>
+        
       )}
 
       <Dialog open={open} onClose={handleClose}>

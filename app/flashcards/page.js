@@ -93,20 +93,31 @@ export default function Flashcards(){
     return(
         <Box
         sx={{
-            position: "fixed",
-            width: "100vw",
-            minHeight: "100vh", // Ensures Box takes at least full viewport height but can expand
-            overflow: "hidden",
-            background: "linear-gradient(to bottom, #f0f0f0, #91bbff)",
-            paddingBottom: "20px", // Add some padding to ensure content doesn't touch the edge
-            textAlign: "center",
-            boxShadow: "0px -2px 5px rgba(0, 0, 0, 0.1)",
-            justifyContent: "center",
-            alignItems: "center",    
+          position: "fixed",
+          width: "100vw",
+          minHeight: "100vh", // Ensures Box takes at least full viewport height but can expand
+          overflow: "hidden",
+          background: "linear-gradient(to bottom, #f0f0f0, #91bbff)",
+          paddingBottom: "20px", // Add some padding to ensure content doesn't touch the edge
+          textAlign: "center",
+          boxShadow: "0px -2px 5px rgba(0, 0, 0, 0.1)",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          display: "flex",
+          paddingBottom: "300px"
+  
         }}
       >
-        <Toolbar position="fixed" display = "flex" justifyContent= "center"
-            alignItems =  "center" >
+        <Toolbar 
+       position="fixed" 
+       sx={{
+       width: '100%',
+       top: "px",
+       left: 0,
+       zIndex: 1200,
+       mb: "125px"
+     }} >
         <IconButton
           edge="start"
           color="inherit"
@@ -206,50 +217,55 @@ export default function Flashcards(){
         </Box>
       </Drawer>
       
-        <Box
-          sx={{
-            maxWidth: 1500, // Set max width for the box
-            p: 4, // Padding inside the box
-            borderRadius: 2, // Rounded corners
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Shadow effect
-            backgroundColor: '#f5f5f5', // Background color
-            display: "flex",
-            paddingLeft: "50px", // Center grid items vertically
-            flexDirection: "column",
-            justifyContent: "center"
-
-          }}
-        >
-          <Grid 
-            container 
-            spacing={3} 
-            justifyContent="center" // Center grid items horizontally
-            alignItems="center"          >
-            {flashcards.map((flashcard, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card
-                  sx={{
-                    borderRadius: 2, // Rounded corners
-                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Card shadow
-                    transition: 'transform 0.3s, box-shadow 0.3s', // Smooth transitions
-                    '&:hover': {
-                      transform: 'scale(1.05)', // Slight zoom effect on hover
-                      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', // Enhanced shadow on hover
-                    },
-                  }}
-                >
-                  <CardActionArea onClick={() => handleCardClick(flashcard.name)}>
-                    <CardContent>
-                      <Typography variant="h6">
-                        {flashcard.name}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+      <Box
+    sx={{
+      maxWidth: 1200, // Set max width for the inner box to control content width
+      width: "100%", // Full width for smaller screens
+      p: 4, // Padding inside the box
+      borderRadius: 2, // Rounded corners
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", // Softer shadow effect
+      backgroundColor: "#ffffff", // White background for the card container
+      mb: "500px",
+    }}
+  >
+    <Typography
+      variant="h5"
+      align="center"
+      sx={{ mb: 3, color: "#00796b", fontWeight: "bold" }} // Title styling
+    >
+      Flashcards Preview
+    </Typography>
+    <Grid
+      container
+      spacing={4} // Increased spacing for a more airy feel
+      justifyContent="center" // Center grid items horizontally
+      alignItems="center" // Center grid items vertically
+    >
+      {flashcards.map((flashcard, index) => (
+        <Grid item xs={12} sm={6} md={4} key={index}>
+          <Card
+            sx={{
+              borderRadius: 2, // Rounded corners
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Card shadow
+              transition: "transform 0.3s, box-shadow 0.3s", // Smooth transitions
+              "&:hover": {
+                transform: "scale(1.05)", // Slight zoom effect on hover
+                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", // Enhanced shadow on hover
+              },
+            }}
+          >
+            <CardActionArea onClick={() => handleCardClick(flashcard.name)}>
+              <CardContent>
+                <Typography variant="h6" align="center">
+                  {flashcard.name}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
+  </Box>
       </Box>
     )
 }
