@@ -14,6 +14,24 @@ export default function Flashcards(){
     const {isLoaded, isSignedIn, user} = useUser()
     const [flashcards, setFlashcards] = useState([])
     const router = useRouter()
+
+    const circleCount = 100; // Increased number of circles for a denser effect
+
+  const circles = Array.from({ length: circleCount }, (_, index) => (
+    <Box
+      key={index}
+      sx={{
+        position: "absolute",
+        borderRadius: "50%",
+        width: `${Math.random() * 5 + 3}px`, // Smaller size range between 3px and 8px
+        height: `${Math.random() * 3 + 3}px`,
+        backgroundColor: "rgba(255, 255, 255, 0.6)", // Slightly more transparent circles
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        animation: `move ${Math.random() * 10 + 25}s ease-in-out infinite`, // Smoother animation with longer duration
+      }}
+    />
+  ));
     
 
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -91,24 +109,67 @@ export default function Flashcards(){
     
 
     return(
-        <Box
+      <Box
+      sx={{
+        position: 'relative',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        background: 'linear-gradient(to bottom, #000046, #000000)', 
+        '@keyframes move': {
+          '0%': {
+            transform: 'translateY(0)',
+          },
+          '100%': {
+            transform: 'translateY(-100vh)',
+          },
+        },
+      }}
+    >
+      <Box
         sx={{
-          position: "fixed",
-          width: "100vw",
-          minHeight: "100vh", // Ensures Box takes at least full viewport height but can expand
-          overflow: "hidden",
-          background: "linear-gradient(to bottom, #f0f0f0, #91bbff)",
-          paddingBottom: "20px", // Add some padding to ensure content doesn't touch the edge
-          textAlign: "center",
-          boxShadow: "0px -2px 5px rgba(0, 0, 0, 0.1)",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          display: "flex",
-          paddingBottom: "300px"
-  
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none', // Allows clicking through the background
         }}
       >
+        <Box
+          sx={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden',
+          }}
+        >
+          {[...Array(100)].map((_, i) => (
+            <Box
+              key={i}
+              sx={{
+                position: 'absolute',
+                borderRadius: '50%',
+                backgroundColor: '#ffffff',
+                opacity: Math.random() * 0.6 + 0.4,
+                width: Math.random() * 3 + 1,
+                height: Math.random() * 3 + 1,
+                top: `${Math.random() * 100}vh`,
+                left: `${Math.random() * 100}vw`,
+                animation: 'twinkle 1.5s infinite alternate',
+              }}
+            />
+          ))}
+        </Box>
+        {circles}
+      </Box>
+      <style jsx>{`
+        @keyframes twinkle {
+          0% { transform: scale(1); opacity: 0.4; }
+          100% { transform: scale(1.5); opacity: 1; }
+        }
+      `}</style>
+       
         <Toolbar 
        position="fixed" 
        sx={{

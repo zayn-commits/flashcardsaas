@@ -88,7 +88,7 @@ export default function Flashcard() {
     WebkitTextFillColor: "transparent",
     fontFamily: "",
     fontSize: "2.5rem",
-    animation: `shimmer 2s linear infinite, fadeIn 2s ease-in-out`,
+    animation: `shimmer 2s linear infinite`,
     "@keyframes shimmer": {
       "0%": {
         backgroundPosition: "-200% 0",
@@ -117,18 +117,65 @@ export default function Flashcard() {
 
   return (
     <Box
-    sx={{
-      position: "relative",
-      width: "100vw",
-      minHeight: "100vh", // Ensures Box takes at least full viewport height but can expand
-      overflow: "hidden",
-      background: "linear-gradient(to bottom, #f0f0f0, #91bbff)",
-      paddingBottom: "20px", // Add some padding to ensure content doesn't touch the edge
-      textAlign: "center",
-      boxShadow: "0px -2px 5px rgba(0, 0, 0, 0.1)",
-      justifyContent: "center",
-      alignItems: "center",    
-  }}>
+      sx={{
+        position: 'absolute',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        background: 'linear-gradient(to bottom, #000046, #000000)', 
+        '@keyframes move': {
+          '0%': {
+            transform: 'translateY(0)',
+          },
+          '100%': {
+            transform: 'translateY(-100vh)',
+          },
+        },
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none', // Allows clicking through the background
+        }}
+      >
+        <Box
+          sx={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden',
+          }}
+        >
+          {[...Array(100)].map((_, i) => (
+            <Box
+              key={i}
+              sx={{
+                position: 'absolute',
+                borderRadius: '50%',
+                backgroundColor: '#ffffff',
+                opacity: Math.random() * 0.6 + 0.4,
+                width: Math.random() * 3 + 1,
+                height: Math.random() * 3 + 1,
+                top: `${Math.random() * 100}vh`,
+                left: `${Math.random() * 100}vw`,
+                animation: 'twinkle 1.5s infinite alternate',
+              }}
+            />
+          ))}
+        </Box>
+      </Box>
+      <style jsx>{`
+        @keyframes twinkle {
+          0% { transform: scale(1); opacity: 0.4; }
+          100% { transform: scale(1.5); opacity: 1; }
+        }
+      `}</style>
+       
     <Toolbar position="fixed">
         <IconButton
           edge="start"
@@ -233,7 +280,7 @@ export default function Flashcard() {
         {" "}
         {flashcards.length > 0 && (
           <Box sx={{ mt: 4 }}>
-            <Typography variant="h5"><SubGradientText>Flashcards Preview</SubGradientText></Typography>
+            <Typography variant="h5" mb = "20px"><SubGradientText>Flashcards Preview</SubGradientText></Typography>
             <Grid container spacing={3}>
               {flashcards.map((flashcard, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>

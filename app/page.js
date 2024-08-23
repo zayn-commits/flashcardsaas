@@ -91,7 +91,7 @@ export default function Home() {
 `;
 
   const HeaderGradientText = styled(Typography)(({ theme }) => ({
-    background: 'linear-gradient(to right, #000000, #5a66d6)', // Gradient colors
+    background: 'linear-gradient(to right, #f0f0f0, #5a66d6)', // Gradient colors
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     fontFamily: '',
@@ -129,7 +129,7 @@ export default function Home() {
   }));
 
   const SubGradientText = styled(Typography)(({ theme }) => ({
-    background: 'linear-gradient(to right, #5a66d6, #000000)', // Gradient colors
+    background: 'linear-gradient(to right, #5a66d6, #f0f0f0)', // Gradient colors
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     fontFamily: '',
@@ -169,27 +169,67 @@ export default function Home() {
 
 
   return (
-    <Box 
-    sx={{
-      position: 'relative',
-      width: '100vw',
-      minHeight: '100vh',
-      overflow: 'hidden',
-      background: 'linear-gradient(to bottom, #f0f0f0, #91bbff)',
-      animation: 'backgroundMove 20s linear infinite',
-      '@keyframes backgroundMove': {
-        '0%': {
-          backgroundPosition: '0% 0%',
+    <Box
+      sx={{
+        position: 'relative',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        background: 'linear-gradient(to bottom, #000046, #000000)', 
+        '@keyframes move': {
+          '0%': {
+            transform: 'translateY(0)',
+          },
+          '100%': {
+            transform: 'translateY(-100vh)',
+          },
         },
-        '50%': {
-          backgroundPosition: '0% 50%',
-        },
-        '100%': {
-          backgroundPosition: '0% 0%',
-        },
-      },
-      backgroundSize: '200% 200%',
-    }}>
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none', // Allows clicking through the background
+        }}
+      >
+        <Box
+          sx={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden',
+          }}
+        >
+          {[...Array(100)].map((_, i) => (
+            <Box
+              key={i}
+              sx={{
+                position: 'absolute',
+                borderRadius: '50%',
+                backgroundColor: '#ffffff',
+                opacity: Math.random() * 0.6 + 0.4,
+                width: Math.random() * 3 + 1,
+                height: Math.random() * 3 + 1,
+                top: `${Math.random() * 100}vh`,
+                left: `${Math.random() * 100}vw`,
+                animation: 'twinkle 1.5s infinite alternate',
+              }}
+            />
+          ))}
+        </Box>
+        {circles}
+      </Box>
+      <style jsx>{`
+        @keyframes twinkle {
+          0% { transform: scale(1); opacity: 0.4; }
+          100% { transform: scale(1.5); opacity: 1; }
+        }
+      `}</style>
+       
       <Toolbar position="fixed">
         <IconButton
           edge="start"
