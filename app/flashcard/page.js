@@ -118,21 +118,23 @@ export default function Flashcard() {
   return (
     <Box
       sx={{
-        position: 'absolute',
+        position: 'relative',
         width: '100vw',
         height: '100vh',
-        overflow: 'hidden',
-        background: 'linear-gradient(to bottom, #000046, #000000)', 
-        '@keyframes move': {
+        background: 'linear-gradient(to bottom, #000046, #000000)',
+        '@keyframes twinkle': {
           '0%': {
-            transform: 'translateY(0)',
+            transform: 'scale(1)',
+            opacity: 0.4,
           },
           '100%': {
-            transform: 'translateY(-100vh)',
+            transform: 'scale(1.5)',
+            opacity: 1,
           },
         },
       }}
     >
+      {/* Background Circles */}
       <Box
         sx={{
           position: 'absolute',
@@ -141,6 +143,7 @@ export default function Flashcard() {
           width: '100%',
           height: '100%',
           pointerEvents: 'none', // Allows clicking through the background
+          overflow: 'hidden',
         }}
       >
         <Box
@@ -148,35 +151,23 @@ export default function Flashcard() {
             position: 'relative',
             width: '100%',
             height: '100%',
-            overflow: 'hidden',
           }}
         >
-          {[...Array(100)].map((_, i) => (
-            <Box
-              key={i}
-              sx={{
-                position: 'absolute',
-                borderRadius: '50%',
-                backgroundColor: '#ffffff',
-                opacity: Math.random() * 0.6 + 0.4,
-                width: Math.random() * 3 + 1,
-                height: Math.random() * 3 + 1,
-                top: `${Math.random() * 100}vh`,
-                left: `${Math.random() * 100}vw`,
-                animation: 'twinkle 1.5s infinite alternate',
-              }}
-            />
-          ))}
         </Box>
       </Box>
-      <style jsx>{`
-        @keyframes twinkle {
-          0% { transform: scale(1); opacity: 0.4; }
-          100% { transform: scale(1.5); opacity: 1; }
-        }
-      `}</style>
-       
-    <Toolbar position="fixed">
+
+      {/* Toolbar */}
+      <Toolbar 
+        position="fixed" 
+        sx={{
+          width: '100%',
+          top: 0,
+          left: 0,
+          zIndex: 1200,
+          background: 'transparent',
+          boxShadow: 'none',
+        }}
+      >
         <IconButton
           edge="start"
           color="inherit"
@@ -188,19 +179,18 @@ export default function Flashcard() {
         <Typography variant="h6" style={{ flexGrow: 1 }} />
         <SignedOut>
           <Button color="inherit" href="/sign-in">
-            {" "}
-            Login{" "}
+            Login
           </Button>
           <Button color="inherit" href="/sign-up">
-            {" "}
-            Signup{" "}
+            Signup
           </Button>
         </SignedOut>
         <SignedIn>
           <UserButton />
         </SignedIn>
       </Toolbar>
-
+      
+      {/* Drawer */}
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box
           sx={{
@@ -214,7 +204,7 @@ export default function Flashcard() {
         >
           {/* Header inside Drawer */}
           <Box sx={{ p: 2, textAlign: 'center', backgroundColor: 'transparent', color: '#fff' }}>
-            <Typography variant="h6" ><SubGradientText>FlipFlash</SubGradientText></Typography>
+            <Typography variant="h6"><SubGradientText>FlipFlash</SubGradientText></Typography>
           </Box>
 
           {/* Buttons for Navigation */}
@@ -276,85 +266,104 @@ export default function Flashcard() {
           </Box>
         </Box>
       </Drawer>
-      <Grid contianer spacing={3} sx={{ mt: 4 }}>
-        {" "}
-        {flashcards.length > 0 && (
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h5" mb = "20px"><SubGradientText>Flashcards Preview</SubGradientText></Typography>
-            <Grid container spacing={3}>
-              {flashcards.map((flashcard, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card>
-                    <CardActionArea
-                      onClick={() => {
-                        handleCardClick(index);
-                      }}
-                    >
-                      <CardContent>
-                        <Box
-                          sx={{
-                            perspective: "1000px",
+
+      {/* Main Content */}
+      <Box
+        sx={{
+          flex: 1,
+          width: '100%',
+          p: 4,
+          borderRadius: 2,
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          backgroundColor: "#ffffff",
+          zIndex: 1,
+          marginTop: '64px', // Adjust margin to account for Toolbar height
+          overflowY: 'auto', // Enable vertical scrolling if needed
+        }}
+      >
+        <Typography
+          variant="h5"
+          align="center"
+          sx={{ mb: 3, color: "#00796b", fontWeight: "bold" }}
+        >
+          <SubGradientText>Flashcards Preview</SubGradientText>
+        </Typography>
+        <Grid container spacing={3}>
+          {flashcards.length > 0 ? (
+            flashcards.map((flashcard, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Card>
+                  <CardActionArea
+                    onClick={() => handleCardClick(index)}
+                  >
+                    <CardContent>
+                      <Box
+                        sx={{
+                          perspective: "1000px",
+                          width: "100%",
+                          height: "200px", // Adjust this as needed
+                          "& > div": {
+                            transition: "transform 0.6s",
+                            transformStyle: "preserve-3d",
+                            position: "relative",
                             width: "100%",
-                            height: "200px", // Adjust this as needed
-                            "& > div": {
-                              transition: "transform 0.6s",
-                              transformStyle: "preserve-3d",
-                              position: "relative",
-                              width: "100%",
-                              height: "100%",
-                              boxShadow: "0 4px 8px 0 rgba(0,0,0, 0.2)",
-                              transform: flipped[index]
-                                ? "rotateY(180deg)"
-                                : "rotateY(0deg)",
-                            },
-                            "& > div > div": {
-                              position: "absolute",
-                              width: "100%",
-                              height: "100%",
-                              backfaceVisibility: "hidden",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              padding: 2,
-                              boxSizing: "border-box",
-                            },
-                            "& > div > div:nth-of-type(2)": {
-                              transform: "rotateY(180deg)",
-                            },
-                          }}
-                        >
+                            height: "100%",
+                            boxShadow: "0 4px 8px 0 rgba(0,0,0, 0.2)",
+                            transform: flipped[index]
+                              ? "rotateY(180deg)"
+                              : "rotateY(0deg)",
+                          },
+                          "& > div > div": {
+                            position: "absolute",
+                            width: "100%",
+                            height: "100%",
+                            backfaceVisibility: "hidden",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            padding: 2,
+                            boxSizing: "border-box",
+                          },
+                          "& > div > div:nth-of-type(2)": {
+                            transform: "rotateY(180deg)",
+                          },
+                        }}
+                      >
+                        <div>
                           <div>
-                            <div>
-                              <Typography
-                                variant="h5"
-                                component="div"
-                                sx={{ fontSize: "1.2rem" }}
-                                alignItems="center"
-                              >
-                                {flashcard.front}
-                              </Typography>
-                            </div>
-                            <div>
-                              <Typography
-                                variant="h5"
-                                component="div"
-                                sx={{ fontSize: "1.2rem" }}
-                                alignItems="center"
-                              >
-                                {flashcard.back}
-                              </Typography>
-                            </div>
+                            <Typography
+                              variant="h5"
+                              component="div"
+                              sx={{ fontSize: "1.2rem" }}
+                              align="center"
+                            >
+                              {flashcard.front}
+                            </Typography>
                           </div>
-                        </Box>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        )}
-      </Grid>
+                          <div>
+                            <Typography
+                              variant="h5"
+                              component="div"
+                              sx={{ fontSize: "1.2rem" }}
+                              align="center"
+                            >
+                              {flashcard.back}
+                            </Typography>
+                          </div>
+                        </div>
+                      </Box>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ))
+          ) : (
+            <Typography variant="h6" align="center" sx={{ color: "#00796b" }}>
+              No flashcards available
+            </Typography>
+          )}
+        </Grid>
+      </Box>
     </Box>
   );
 }

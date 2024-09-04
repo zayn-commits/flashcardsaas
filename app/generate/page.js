@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "@/firebase";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
@@ -13,18 +13,12 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import {
-  AppBar,
-  Container,
   Toolbar,
   Typography,
   Button,
   Box,
-  Grid,
   IconButton,
   Drawer,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Paper,
   TextField,
   Dialog,
@@ -52,21 +46,23 @@ export default function Generate() {
 
   const circleCount = 100; // Increased number of circles for a denser effect
 
-  const circles = Array.from({ length: circleCount }, (_, index) => (
-    <Box
-      key={index}
-      sx={{
-        position: "absolute",
-        borderRadius: "50%",
-        width: `${Math.random() * 5 + 3}px`, // Smaller size range between 3px and 8px
-        height: `${Math.random() * 3 + 3}px`,
-        backgroundColor: "rgba(255, 255, 255, 0.6)", // Slightly more transparent circles
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        animation: `move ${Math.random() * 10 + 25}s ease-in-out infinite`, // Smoother animation with longer duration
-      }}
-    />
-  ));
+  const circles = useMemo(() => {
+    return Array.from({ length: circleCount }, (_, index) => (
+      <Box
+        key={index}
+        sx={{
+          position: "absolute",
+          borderRadius: "50%",
+          width: `${Math.random() * 5 + 3}px`, // Smaller size range between 3px and 8px
+          height: `${Math.random() * 3 + 3}px`,
+          backgroundColor: "rgba(255, 255, 255, 0.6)", // Slightly more transparent circles
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+          animation: `move ${Math.random() * 10 + 25}s ease-in-out infinite`, // Smoother animation with longer duration
+        }}
+      />
+    ));
+  }, [circleCount]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -210,6 +206,7 @@ export default function Generate() {
     <Box
       sx={{
         position: 'relative',
+        display: "flex",
         width: '100vw',
         minHeight: '100vh',
         overflow: 'hidden',
@@ -217,14 +214,6 @@ export default function Generate() {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        '@keyframes move': {
-          '0%': {
-            transform: 'translateY(0)',
-          },
-          '100%': {
-            transform: 'translateY(-100vh)',
-          },
-        },
       }}
     >
       <Box
@@ -234,7 +223,7 @@ export default function Generate() {
           left: 0,
           width: '100%',
           height: '100%',
-          pointerEvents: 'none', // Allows clicking through the background
+          pointerEvents: 'none',
         }}
       >
         <Box
@@ -262,23 +251,17 @@ export default function Generate() {
             />
           ))}
         </Box>
-        {circles}
       </Box>
-      <style jsx>{`
-        @keyframes twinkle {
-          0% { transform: scale(1); opacity: 0.4; }
-          100% { transform: scale(1.5); opacity: 1; }
-        }
-      `}</style>
-       
+  
       <Toolbar 
-          position="fixed" 
-          sx={{
+        sx={{
+          position: 'fixed',
           width: '100%',
           top: 0,
           left: 0,
-          zIndex: 1200, // Ensure it's above other content
-        }} >
+          zIndex: 1200,
+        }} 
+      >
         <IconButton
           edge="start"
           color="inherit"
@@ -289,43 +272,28 @@ export default function Generate() {
         </IconButton>
         <Typography variant="h6" style={{ flexGrow: 1 }} />
         <SignedOut>
-          <Button color="inherit" href="/sign-in">
-            {" "}
-            Login{" "}
-          </Button>
-          <Button color="inherit" href="/sign-up">
-            {" "}
-            Signup{" "}
-          </Button>
+          <Button color="inherit" href="/sign-in">Login</Button>
+          <Button color="inherit" href="/sign-up">Signup</Button>
         </SignedOut>
         <SignedIn>
           <UserButton />
         </SignedIn>
       </Toolbar>
-
+  
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box
           sx={{
             width: 250,
-            background: "linear-gradient(to top, #f0f0f0, #b7cced)", // Custom background color
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
+            background: 'linear-gradient(to top, #f0f0f0, #b7cced)', // Custom background color
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
           }}
         >
           {/* Header inside Drawer */}
-          <Box
-            sx={{
-              p: 2,
-              textAlign: "center",
-              backgroundColor: "transparent",
-              color: "#fff",
-            }}
-          >
-            <Typography variant="h6">
-              <SubGradientText>FlipFlash</SubGradientText>
-            </Typography>
+          <Box sx={{ p: 2, textAlign: 'center', backgroundColor: 'transparent', color: '#fff' }}>
+            <Typography variant="h6" ><SubGradientText>FlipFlash</SubGradientText></Typography>
           </Box>
 
           {/* Buttons for Navigation */}
@@ -338,10 +306,10 @@ export default function Generate() {
                 href="/"
                 sx={{
                   my: 1,
-                  backgroundColor: "transparent",
-                  color: "#000",
-                  "&:hover": {
-                    backgroundColor: "transparent",
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
                   },
                 }}
               >
@@ -356,10 +324,10 @@ export default function Generate() {
                 href="/generate"
                 sx={{
                   my: 1,
-                  backgroundColor: "transparent",
-                  color: "#000",
-                  "&:hover": {
-                    backgroundColor: "transparent",
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
                   },
                 }}
               >
@@ -374,10 +342,10 @@ export default function Generate() {
                 href="/flashcards"
                 sx={{
                   my: 1,
-                  backgroundColor: "transparent",
-                  color: "#000",
-                  "&:hover": {
-                    backgroundColor: "transparent",
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
                   },
                 }}
               >
@@ -387,15 +355,15 @@ export default function Generate() {
           </Box>
         </Box>
       </Drawer>
-
+  
       <Typography
         variant="h4"
         align="center"
-        sx={{ mb: 4, fontWeight: "bold", color: "#00796b"}}
+        sx={{ mb: 4, fontWeight: "bold", color: "#00796b" }}
       >
         <HeaderGradientText>Enter prompt</HeaderGradientText>
       </Typography>
-
+  
       <Paper
         elevation={3}
         sx={{
@@ -405,10 +373,7 @@ export default function Generate() {
           borderRadius: 2,
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
           backgroundColor: "#ffffff",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textAlign: "center", // Ensure text alignment is centered
+          textAlign: "center",
         }}
       >
         <TextField
@@ -421,7 +386,7 @@ export default function Generate() {
           variant="outlined"
           sx={{
             mb: 2,
-            maxWidth: 600,  // Set a max-width to control the size
+            maxWidth: 600,
             "& .MuiOutlinedInput-root": {
               borderRadius: 2,
               "& fieldset": {
@@ -446,110 +411,105 @@ export default function Generate() {
             py: 1.5,
             fontWeight: "bold",
             backgroundImage: "linear-gradient(to right, #f0f0f0, #91bbff)", 
-            color: "#1d1d6b", // Set text color to black
+            color: "#1d1d6b",
             "&:hover": {
-              backgroundImage: "linear-gradient(to right, #f0f0f0, #6161fa)", // Reverse gradient on hover
+              backgroundImage: "linear-gradient(to right, #f0f0f0, #6161fa)",
             },
           }}
         >
           Submit
         </Button>
       </Paper>
-
+  
       {flashcards.length > 0 && (
-      <Box sx={{
-        mt: 4, 
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection:"column" ,
-        mb: "8px"
-      }}
-      
-      >
-        <Typography variant="h5" align="center" sx={{ mb: 2 }}>Flashcards Preview</Typography>
-
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={handlePrev}>
-            <ArrowBack />
-          </IconButton>
-
-          <Card 
-            sx={{
-              maxWidth: 280,
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-              borderRadius: 2,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              textAlign: "center",
-            }}
-          >
-            <CardActionArea onClick={() => handleCardClick(currentIndex)}>
-              <CardContent>
-                <Box
-                  sx={{
-                    perspective: "1000px",
-                    width: "250px",
-                    height: "200px",
-                    "& > div": {
-                      transition: "transform 0.6s",
-                      transformStyle: "preserve-3d",
-                      position: "relative",
-                      width: "100%",
-                      height: "100%",
-                      boxShadow: "0 4px 8px 0 rgba(0,0,0, 0.2)",
-                      transform: flipped[currentIndex]
-                        ? "rotateY(180deg)"
-                        : "rotateY(0deg)",
-                    },
-                    "& > div > div": {
-                      position: "absolute",
-                      width: "100%",
-                      height: "100%",
-                      backfaceVisibility: "hidden",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      padding: 2,
-                      boxSizing: "border-box",
-                    },
-                    "& > div > div:nth-of-type(2)": {
-                      transform: "rotateY(180deg)",
-                    },
-                  }}
-                >
-                  <div>
+        <Box sx={{
+          mt: 4, 
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection:"column" ,
+          mb: "8px"
+        }}>
+          <Typography variant="h5" align="center" sx={{ mb: 2 }}>Flashcards Preview</Typography>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton onClick={handlePrev}>
+              <ArrowBack />
+            </IconButton>
+  
+            <Card 
+              sx={{
+                maxWidth: 280,
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                borderRadius: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <CardActionArea onClick={() => handleCardClick(currentIndex)}>
+                <CardContent>
+                  <Box
+                    sx={{
+                      perspective: "1000px",
+                      width: "250px",
+                      height: "200px",
+                      "& > div": {
+                        transition: "transform 0.6s",
+                        transformStyle: "preserve-3d",
+                        position: "relative",
+                        width: "100%",
+                        height: "100%",
+                        boxShadow: "0 4px 8px 0 rgba(0,0,0, 0.2)",
+                        transform: flipped[currentIndex]
+                          ? "rotateY(180deg)"
+                          : "rotateY(0deg)",
+                      },
+                      "& > div > div": {
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                        backfaceVisibility: "hidden",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 2,
+                        boxSizing: "border-box",
+                      },
+                      "& > div > div:nth-of-type(2)": {
+                        transform: "rotateY(180deg)",
+                      },
+                    }}
+                  >
                     <div>
-                      <Typography variant="h5" sx={{ fontSize: "1.1rem" }}>
-                        {flashcards[currentIndex].front}
-                      </Typography>
+                      <div>
+                        <Typography variant="h5" sx={{ fontSize: "1.1rem" }}>
+                          {flashcards[currentIndex].front}
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography variant="h5" sx={{ fontSize: "1.1rem" }}>
+                          {flashcards[currentIndex].back}
+                        </Typography>
+                      </div>
                     </div>
-                    <div>
-                      <Typography variant="h5" sx={{ fontSize: "1.1rem" }}>
-                        {flashcards[currentIndex].back}
-                      </Typography>
-                    </div>
-                  </div>
-                </Box>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-
-          <IconButton onClick={handleNext}>
-            <ArrowForward />
-          </IconButton>
+                  </Box>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+  
+            <IconButton onClick={handleNext}>
+              <ArrowForward />
+            </IconButton>
+          </Box>
+          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+            <Button variant="contained" color="secondary" onClick={handleOpen}>
+              Save
+            </Button>
+          </Box>
         </Box>
-        <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-          <Button variant="contained" color="secondary" onClick={handleOpen}>
-            Save
-          </Button>
-        </Box>
-        
-        </Box>
-        
       )}
-
+  
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Save Flashcards</DialogTitle>
         <DialogContent>
@@ -572,6 +532,7 @@ export default function Generate() {
           <Button onClick={SaveFlashcards}>Save</Button>
         </DialogActions>
       </Dialog>
+  
     </Box>
   );
 }

@@ -129,7 +129,7 @@ export default function Home() {
   }));
 
   const SubGradientText = styled(Typography)(({ theme }) => ({
-    background: 'linear-gradient(to right, #5a66d6, #f0f0f0)', // Gradient colors
+    background: 'linear-gradient(to right, #5a66d6, #000000)', // Gradient colors
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     fontFamily: '',
@@ -237,7 +237,7 @@ export default function Home() {
           aria-label="menu"
           onClick={toggleDrawer(true)}
         >
-          <MenuIcon />
+          <MenuIcon sx={{ color: 'white' }}/>
         </IconButton>
         <Typography variant="h6" style={{ flexGrow: 1 }} />
         <SignedOut>

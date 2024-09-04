@@ -112,20 +112,18 @@ export default function Flashcards(){
       <Box
       sx={{
         position: 'relative',
+        display: "flex",
         width: '100vw',
-        height: '100vh',
+        minHeight: '100vh',
         overflow: 'hidden',
-        background: 'linear-gradient(to bottom, #000046, #000000)', 
-        '@keyframes move': {
-          '0%': {
-            transform: 'translateY(0)',
-          },
-          '100%': {
-            transform: 'translateY(-100vh)',
-          },
-        },
+        background: 'linear-gradient(to bottom, #000046, #000000)',
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        mb: '0', // Ensure no margin-bottom on the main container
       }}
     >
+      {/* Background Circles */}
       <Box
         sx={{
           position: 'absolute',
@@ -133,7 +131,7 @@ export default function Flashcards(){
           left: 0,
           width: '100%',
           height: '100%',
-          pointerEvents: 'none', // Allows clicking through the background
+          pointerEvents: 'none',
         }}
       >
         <Box
@@ -144,41 +142,21 @@ export default function Flashcards(){
             overflow: 'hidden',
           }}
         >
-          {[...Array(100)].map((_, i) => (
-            <Box
-              key={i}
-              sx={{
-                position: 'absolute',
-                borderRadius: '50%',
-                backgroundColor: '#ffffff',
-                opacity: Math.random() * 0.6 + 0.4,
-                width: Math.random() * 3 + 1,
-                height: Math.random() * 3 + 1,
-                top: `${Math.random() * 100}vh`,
-                left: `${Math.random() * 100}vw`,
-                animation: 'twinkle 1.5s infinite alternate',
-              }}
-            />
-          ))}
+          {circles}
         </Box>
-        {circles}
       </Box>
-      <style jsx>{`
-        @keyframes twinkle {
-          0% { transform: scale(1); opacity: 0.4; }
-          100% { transform: scale(1.5); opacity: 1; }
-        }
-      `}</style>
-       
-        <Toolbar 
-       position="fixed" 
-       sx={{
-       width: '100%',
-       top: "px",
-       left: 0,
-       zIndex: 1200,
-       mb: "110px"
-     }} >
+
+      {/* Toolbar */}
+      <Toolbar 
+        position="fixed" 
+        sx={{
+          width: '100%',
+          top: 0,
+          left: 0,
+          zIndex: 1200,
+          mb: "110px"
+        }}
+      >
         <IconButton
           edge="start"
           color="inherit"
@@ -279,54 +257,56 @@ export default function Flashcards(){
       </Drawer>
       
       <Box
-    sx={{
-      maxWidth: 1200, // Set max width for the inner box to control content width
-      width: "100%", // Full width for smaller screens
-      p: 4, // Padding inside the box
-      borderRadius: 2, // Rounded corners
-      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", // Softer shadow effect
-      backgroundColor: "#ffffff", // White background for the card container
-      mb: "500px",
-    }}
-  >
-    <Typography
-      variant="h5"
-      align="center"
-      sx={{ mb: 3, color: "#00796b", fontWeight: "bold" }} // Title styling
-    >
-      <SubGradientText>Flashcards Preview</SubGradientText>
-    </Typography>
-    <Grid
-      container
-      spacing={4} // Increased spacing for a more airy feel
-      justifyContent="center" // Center grid items horizontally
-      alignItems="center" // Center grid items vertically
-    >
-      {flashcards.map((flashcard, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index}>
-          <Card
-            sx={{
-              borderRadius: 2, // Rounded corners
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Card shadow
-              transition: "transform 0.3s, box-shadow 0.3s", // Smooth transitions
-              "&:hover": {
-                transform: "scale(1.05)", // Slight zoom effect on hover
-                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", // Enhanced shadow on hover
-              },
-            }}
-          >
-            <CardActionArea onClick={() => handleCardClick(flashcard.name)}>
-              <CardContent>
-                <Typography variant="h6" align="center">
-                  {flashcard.name}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+        sx={{
+          overflow: 'hidden',
+          maxWidth: 1200,
+          width: "100%",
+          p: 4,
+          borderRadius: 2,
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          backgroundColor: "#ffffff",
+          mb: "500px",
+          zIndex: 1, // Ensure the content is above the background
+        }}
+      >
+        <Typography
+          variant="h5"
+          align="center"
+          sx={{ mb: 3, color: "#00796b", fontWeight: "bold" }}
+        >
+          <SubGradientText>Flashcards Preview</SubGradientText>
+        </Typography>
+        <Grid
+          container
+          spacing={4}
+          justifyContent="center"
+          alignItems="center"
+        >
+          {flashcards.map((flashcard, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Card
+                sx={{
+                  borderRadius: 2,
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  transition: "transform 0.3s, box-shadow 0.3s",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+                  },
+                }}
+              >
+                <CardActionArea onClick={() => handleCardClick(flashcard.name)}>
+                  <CardContent>
+                    <Typography variant="h6" align="center">
+                      {flashcard.name}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
-      ))}
-    </Grid>
-  </Box>
       </Box>
-    )
+    </Box>
+  );
 }
